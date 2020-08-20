@@ -8,16 +8,17 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          App en construcción. Visitá nuestra {' '}
+          <a
+            className="App-link"
+            href="https://terrenoscharata.com.ar"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            página de Facebook
+          </a>
+          .
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
