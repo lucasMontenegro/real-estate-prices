@@ -11,7 +11,7 @@ function App() {
           App en construcción. Visitá nuestra {' '}
           <a
             className="App-link"
-            href="https://terrenoscharata.com.ar"
+            href="https://www.facebook.com/terrenos.charata"
             target="_blank"
             rel="noopener noreferrer"
           >
