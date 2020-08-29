@@ -1,9 +1,7 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import App from './App';
-
-test('renders home link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/en construcción/i);
-  expect(linkElement).toBeInTheDocument();
-});
+import { render, screen } from '@testing-library/react'
+import React from 'react'
+import App from './App'
+test('renders facebook link', () => {
+  render(<App />)
+  expect(screen.getByText(/facebook/i)).toBeInTheDocument()
+})
