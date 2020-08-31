@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "cd react-ui && npm start",
-    "build": "cd react-ui && npm run build"
+    "build": "cd react-ui && npm run build",
+    "install": "mkdir react-ui/build && ln -s react-ui/build build"
   }
 }
