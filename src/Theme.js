@@ -1,18 +1,18 @@
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
-import React from 'react'
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import React from "react";
 const theme = createMuiTheme({
   breakpoints: {
-    unit: 'rem',
+    unit: "rem",
     values: {
       xs: 0,
       sm: 37.5,
       md: 60,
       lg: 80,
-      xl: 120
-    }
-  }
-})
-function Theme (props) {
-  return <ThemeProvider theme={theme}>{props.children}</ThemeProvider>
+      xl: 120,
+    },
+  },
+});
+function Theme(props) {
+  return <ThemeProvider theme={theme}>{props.children}</ThemeProvider>;
 }
-export default Theme
+export default Theme;
