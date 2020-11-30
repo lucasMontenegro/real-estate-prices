@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
-import App from "./App";
+import View from "./index";
 test("renders facebook link", () => {
-  render(<App />);
+  render(<View />);
   expect(screen.getByText(/facebook/i)).toBeInTheDocument();
 });

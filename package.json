@@ -70,6 +70,7 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "main-dev-server": "node scripts/main-dev-server",
     "view-dev-server": "node scripts/view-dev-server",
     "prod-client-compiler": "node scripts/prod-client-compiler",
     "jest-qa": "node scripts/jest-qa"
