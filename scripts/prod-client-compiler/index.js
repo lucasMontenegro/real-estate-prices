@@ -10,6 +10,6 @@ process.on("unhandledRejection", (err) => {
 const localConfig = require("./config.local");
 
 require("../lib/clientCompiler")({
-  ...localConfig,
   buildDir: "client",
+  ...localConfig,
 });
