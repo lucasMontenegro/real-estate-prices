@@ -67,13 +67,12 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "main-dev-server": "node scripts/main-dev-server",
-    "view-dev-server": "node scripts/view-dev-server",
+    "build": "npm run prod-client-compiler",
     "prod-client-compiler": "node scripts/prod-client-compiler",
-    "jest-qa": "node scripts/jest-qa"
+    "test": "node scripts/test-all",
+    "jest-tdd": "node scripts/jest-tdd",
+    "main-dev-server": "node scripts/main-dev-server",
+    "view-dev-server": "node scripts/view-dev-server"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -5,6 +5,6 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-const localConfig = require("./config.local");
-
-require("../lib/jestQa")(localConfig);
+require("./lib/jestQa")({
+  CI: process.env.CI || "true",
+});
