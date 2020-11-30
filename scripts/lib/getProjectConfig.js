@@ -72,9 +72,6 @@ function getProjectConfig(target, ...args) {
   }
 
   if (isTarget("clientCompiler", "devServer")) {
-    // Detect continuous integration environment.
-    cfg.isCI = Boolean(opts.CI) && opts.CI.toLowerCase() !== "false"; // default false
-
     cfg.indexHtmlPath = resolveApp(opts.indexHtmlPath || "public/index.html");
     cfg.indexJsPath = resolveModule(opts.indexJsPath || "src/index");
 
@@ -173,6 +170,11 @@ function getProjectConfig(target, ...args) {
     cfg.useTypeScript = fs.existsSync(cfg.tsConfigPath);
 
     cfg.useYarn = fs.existsSync(resolveApp("yarn.lock"));
+  }
+
+  if (isTarget("clientCompiler", "devServer", "jestQa")) {
+    // Detect continuous integration environment.
+    cfg.isCI = Boolean(opts.CI) && opts.CI.toLowerCase() !== "false"; // default false
   }
   return cfg;
 }

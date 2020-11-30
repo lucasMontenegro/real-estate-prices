@@ -71,7 +71,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "view-dev-server": "node scripts/view-dev-server",
-    "prod-client-compiler": "node scripts/prod-client-compiler"
+    "prod-client-compiler": "node scripts/prod-client-compiler",
+    "jest-qa": "node scripts/jest-qa"
   },
   "eslintConfig": {
     "extends": "react-app"
