@@ -7,7 +7,15 @@ process.on("unhandledRejection", (err) => {
   throw err;
 });
 
-const localConfig = require("./config.local");
+let localConfig;
+try {
+  localConfig = require("./config.local");
+} catch (e) {
+  if (e.message !== "Cannot find module './config.local'") {
+    throw e;
+  }
+  localConfig = {};
+}
 
 require("../lib/clientCompiler")({
   buildDir: "client",
