@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!--
+      Files inside the `public` folder can be referenced from the HTML. For
+      example, requesting `example.com/foo.txt` will get you the file
+      `public/foo.txt`.
+
+      If your app is not going to be served at the root path, you have to set
+      the `mountingPath` option to the correct path. Then you can access its
+      value by placing `%MOUNTING_PATH%` anywhere in this file and through
+      `process.env.MOUNTING_PATH` in any javascript module under `src`.
+      For example, if `mountingPath` is set to `/my-app/` then `public/foo.txt`
+      is going to be served as `example.com/my-app/foo.txt`
+
+      The `base` element below sets the base path for all relative paths in
+      this file. This let us write `foo.txt` instead of
+      `%MOUNTING_PATH%foo.txt`. Placing `/foo.txt` will resolve to
+      `example.com/foo.txt` and not `example.com/my-app/foo.txt`.
+      Relative paths also work with `fetch`.
+    -->
+    <base href="%MOUNTING_PATH%" />
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="minimum-scale=1, width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.ico" />
+    <meta
+      name="viewport"
+      content="minimum-scale=1, width=device-width, initial-scale=1"
+    />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Precios actualizados de inmuebles en Charata, Chaco, Argentina" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <meta
+      name="description"
+      content="Precios actualizados de inmuebles en Charata, Chaco, Argentina"
+    />
+    <link rel="apple-touch-icon" href="logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+    <link rel="manifest" href="manifest.json" />
     <title>Terrenos Charata</title>
   </head>
   <body>
