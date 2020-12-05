@@ -8,7 +8,7 @@ process.on("unhandledRejection", (err) => {
 const localConfig = require("./config.local");
 
 require("../lib/devServer")({
-  indexJsPath: "src/View/developmentClient",
+  indexJsPath: "src/devClient/index",
   devServer: {
     host: "127.0.0.1",
     ...localConfig.devServer,

@@ -18,9 +18,9 @@ const useStyles = makeStyles(
       },
     },
   }),
-  { name: "App" }
+  { name: "View" }
 );
-function App() {
+function View() {
   const classes = useStyles();
   return (
     <Theme>
@@ -43,4 +43,4 @@ function App() {
     </Theme>
   );
 }
-export default App;
+export default View;

@@ -18,6 +18,7 @@ try {
 }
 
 require("../lib/clientCompiler")({
+  indexJsPath: "src/client/index",
   buildDir: "client",
   ...localConfig,
 });
