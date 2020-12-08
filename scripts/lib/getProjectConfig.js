@@ -17,13 +17,12 @@ const chalk = require("react-dev-utils/chalk");
 function getProjectConfig(target, ...args) {
   let [nodeEnv, opts] = typeof args[0] === "string" ? args : [null, args[0]];
   const isTarget = (...arr) => arr.includes(target);
-  const cfg = { target };
+  const cfg = { target, devServer: {} };
 
   if (isTarget("devServer")) {
     if (!opts.devServer) {
       opts = { ...opts, devServer: {} };
     }
-    cfg.devServer = {};
 
     // Tools like Cloud9 rely on this.
     cfg.devServer.favoritePort = opts.devServer.favoritePort || 3000;
@@ -65,6 +64,30 @@ function getProjectConfig(target, ...args) {
     cfg.devServer.socketHost = opts.devServer.socketHost;
     cfg.devServer.socketPort = opts.devServer.socketPort;
     cfg.devServer.socketPath = opts.devServer.socketPath;
+
+    // `react-refresh` is not 100% stable at this time, which is why it's
+    // disabled by default.
+    // We pass it to the client as an environment variable so it is available
+    // in the `webpackHotDevClient`.
+    cfg.devServer.fastRefresh = opts.devServer.fastRefresh === true;
+    // Note: Add this to `node_modules/react-dev-utils/webpackHotDevClient`:
+    // diff --git a/packages/react-dev-utils/webpackHotDevClient.js b/packages/react-dev-utils/webpackHotDevClient.js
+    // index 1054ce48..0379358f 100644
+    // --- a/packages/react-dev-utils/webpackHotDevClient.js
+    // +++ b/packages/react-dev-utils/webpackHotDevClient.js
+
+    // @@ -243,7 +243,10 @@ function tryApplyUpdates(onHotUpdateSuccess) {
+    //    }
+    //
+    //    function handleApplyUpdates(err, updatedModules) {
+    // -    if (err || !updatedModules || hadRuntimeError) {
+    // +    const hasReactRefresh = process.env.FAST_REFRESH;
+    // +    const wantsForcedReload = err || !updatedModules || hadRuntimeError;
+    // +    // React refresh can handle hot-reloading over errors.
+    // +    if (!hasReactRefresh && wantsForcedReload) {
+    //        window.location.reload();
+    //        return;
+    //      }
   }
 
   if (isTarget("clientCompiler")) {

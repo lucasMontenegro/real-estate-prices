@@ -14,6 +14,8 @@ function getClientEnvironment(cfg) {
     raw.WDS_SOCKET_HOST = cfg.devServer.socketHost;
     raw.WDS_SOCKET_PORT = cfg.devServer.socketPort;
     raw.WDS_SOCKET_PATH = cfg.devServer.socketPath;
+
+    raw.FAST_REFRESH = cfg.devServer.fastRefresh;
   }
 
   // Stringify all values so we can feed into webpack DefinePlugin

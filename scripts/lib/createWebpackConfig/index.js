@@ -23,8 +23,12 @@ const getClientEnvironment = require("./getClientEnvironment");
 const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
 const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpackPlugin");
 const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
-
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const postcssNormalize = require("postcss-normalize");
+
+const webpackDevClientEntry = require.resolve(
+  "react-dev-utils/webpackHotDevClient"
+);
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -121,12 +125,14 @@ function webpackConfigFactory(cfg) {
       // of CSS changes), or refresh the page (in case of JS changes). When you
       // make a syntax error, this client will display a syntax error overlay.
       // Note: instead of the default WebpackDevServer client, we use a custom one
-      // to bring better experience for Create React App users. You can replace
-      // the line below with these two lines if you prefer the stock client:
+      // to bring better experience for Create React App users.
+      // Note 2: When using the experimental react-refresh integration, the
+      // webpack plugin takes care of injecting the dev client for us.
+      // You can replace the line below with these two lines if you prefer the
+      // stock client:
       // require.resolve('webpack-dev-server/client') + '?/',
       // require.resolve('webpack/hot/dev-server'),
-      isEnvDevelopment &&
-        require.resolve("react-dev-utils/webpackHotDevClient"),
+      isEnvDevelopment && !cfg.devServer.fastRefresh && webpackDevClientEntry,
       // Finally, this is your app's code:
       cfg.indexJsPath,
       // We include the app code last so that if there is a runtime error during
@@ -355,7 +361,10 @@ function webpackConfigFactory(cfg) {
                       },
                     },
                   ],
-                ],
+                  isEnvDevelopment &&
+                    cfg.devServer.fastRefresh &&
+                    require.resolve("react-refresh/babel"),
+                ].filter(Boolean),
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
                 // directory for faster rebuilds.
@@ -529,6 +538,17 @@ function webpackConfigFactory(cfg) {
       new webpack.DefinePlugin(clientEnv.js),
       // This is necessary to emit hot updates (currently CSS only):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      // Experimental hot reloading for React.
+      // https://github.com/facebook/react/tree/master/packages/react-refresh
+      isEnvDevelopment &&
+        cfg.devServer.fastRefresh &&
+        new ReactRefreshWebpackPlugin({
+          overlay: {
+            entry: webpackDevClientEntry,
+            // TODO: This is just a stub module. Clean this up if possible.
+            module: require.resolve("./hotRefreshOverlayModuleStub"),
+          },
+        }),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
