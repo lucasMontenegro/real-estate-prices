@@ -96,7 +96,7 @@ function devServer(opts = {}) {
         });
       });
 
-      if (cfg.isInteractive || !cfg.isCI) {
+      if (!cfg.isCI) {
         // Gracefully exit when stdin ends
         process.stdin.on("end", function () {
           wpDevServer.close();
