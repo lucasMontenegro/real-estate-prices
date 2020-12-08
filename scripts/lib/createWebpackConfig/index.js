@@ -84,7 +84,7 @@ function webpackConfigFactory(cfg) {
             // which in turn let's users customize the target behavior as per their needs.
             postcssNormalize(),
           ],
-          sourceMap: isEnvProduction && cfg.generateSourcemap,
+          sourceMap: isEnvProduction ? cfg.generateSourcemap : isEnvDevelopment,
         },
       },
     ].filter(Boolean);
@@ -93,7 +93,9 @@ function webpackConfigFactory(cfg) {
         {
           loader: require.resolve("resolve-url-loader"),
           options: {
-            sourceMap: isEnvProduction && cfg.generateSourcemap,
+            sourceMap: isEnvProduction
+              ? cfg.generateSourcemap
+              : isEnvDevelopment,
           },
         },
         {
@@ -415,7 +417,9 @@ function webpackConfigFactory(cfg) {
               exclude: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
-                sourceMap: isEnvProduction && cfg.generateSourcemap,
+                sourceMap: isEnvProduction
+                  ? cfg.generateSourcemap
+                  : isEnvDevelopment,
               }),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
@@ -429,7 +433,9 @@ function webpackConfigFactory(cfg) {
               test: cssModuleRegex,
               use: getStyleLoaders({
                 importLoaders: 1,
-                sourceMap: isEnvProduction && cfg.generateSourcemap,
+                sourceMap: isEnvProduction
+                  ? cfg.generateSourcemap
+                  : isEnvDevelopment,
                 modules: {
                   getLocalIdent: getCSSModuleLocalIdent,
                 },
@@ -444,7 +450,9 @@ function webpackConfigFactory(cfg) {
               use: getStyleLoaders(
                 {
                   importLoaders: 3,
-                  sourceMap: isEnvProduction && cfg.generateSourcemap,
+                  sourceMap: isEnvProduction
+                    ? cfg.generateSourcemap
+                    : isEnvDevelopment,
                 },
                 "sass-loader"
               ),
@@ -461,7 +469,9 @@ function webpackConfigFactory(cfg) {
               use: getStyleLoaders(
                 {
                   importLoaders: 3,
-                  sourceMap: isEnvProduction && cfg.generateSourcemap,
+                  sourceMap: isEnvProduction
+                    ? cfg.generateSourcemap
+                    : isEnvDevelopment,
                   modules: {
                     getLocalIdent: getCSSModuleLocalIdent,
                   },
