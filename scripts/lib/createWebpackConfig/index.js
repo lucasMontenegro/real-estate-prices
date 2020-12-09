@@ -96,6 +96,7 @@ function webpackConfigFactory(cfg) {
             sourceMap: isEnvProduction
               ? cfg.generateSourcemap
               : isEnvDevelopment,
+            root: cfg.srcDir,
           },
         },
         {
