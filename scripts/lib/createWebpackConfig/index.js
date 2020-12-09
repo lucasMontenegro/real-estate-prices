@@ -557,8 +557,6 @@ function webpackConfigFactory(cfg) {
         new ReactRefreshWebpackPlugin({
           overlay: {
             entry: webpackDevClientEntry,
-            // TODO: This is just a stub module. Clean this up if possible.
-            module: require.resolve("./hotRefreshOverlayModuleStub"),
           },
         }),
       // Watcher doesn't work well if you mistype casing in a path so we use
@@ -632,7 +630,6 @@ function webpackConfigFactory(cfg) {
             basedir: cfg.nodeModulesDir,
           }),
           async: isEnvDevelopment,
-          useTypescriptIncrementalApi: true,
           checkSyntacticErrors: true,
           resolveModuleNameModule: process.versions.pnp
             ? `${__dirname}/pnpTs.js`
@@ -642,9 +639,9 @@ function webpackConfigFactory(cfg) {
             : undefined,
           tsconfig: cfg.tsConfigPath,
           reportFiles: [
-            "**",
-            "!**/__tests__/**",
-            "!**/?(*.)(spec|test).*",
+            "**/src/**/*.{ts,tsx}",
+            "!**/src/**/__tests__/**",
+            "!**/src/**/?(*.)(spec|test).*",
             "!**/src/setupProxy.*",
             "!**/src/setupTests.*",
           ],
