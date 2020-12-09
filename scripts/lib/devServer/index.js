@@ -102,7 +102,6 @@ function devServer(opts = {}) {
           wpDevServer.close();
           process.exit();
         });
-        process.stdin.resume();
       }
     })
     .catch((err) => {
