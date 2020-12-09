@@ -1,1 +1,2 @@
-export default null;
+const fixtures = null;
+export default fixtures;
