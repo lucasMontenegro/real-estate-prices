@@ -53,6 +53,7 @@ function clientCompiler(opts) {
     })
     .then(([err, stats, previousFileSizes]) => {
       function printErrorAndExit(err) {
+        // TODO: Filter Typescript errors properly
         if (cfg.tscCompileOnError) {
           console.log(
             chalk.yellow(
