@@ -9,6 +9,7 @@ const getProjectConfig = require("../getProjectConfig");
 const path = require("path");
 const chalk = require("react-dev-utils/chalk");
 const fs = require("fs-extra");
+const bfj = require("bfj");
 const webpack = require("webpack");
 const createWebpackConfig = require("../createWebpackConfig");
 const checkRequiredFiles = require("react-dev-utils/checkRequiredFiles");
@@ -44,86 +45,113 @@ function clientCompiler(opts) {
       });
 
       console.log("Creating an optimized production build...");
-      webpack(createWebpackConfig(cfg)).run((err, stats) => {
-        let messages;
-        if (err) {
-          if (!err.message) {
-            return handleCompilerError(err);
-          }
-
-          let errMessage = err.message;
-
-          // Add additional information for postcss errors
-          if (Object.prototype.hasOwnProperty.call(err, "postcssNode")) {
-            errMessage +=
-              "\nCompileError: Begins at CSS selector " +
-              err["postcssNode"].selector;
-          }
-
-          messages = formatWebpackMessages({
-            errors: [errMessage],
-            warnings: [],
-          });
-        } else {
-          messages = formatWebpackMessages(
-            stats.toJson({ all: false, warnings: true, errors: true })
-          );
-        }
-        if (messages.errors.length) {
-          // Only keep the first error. Others are often indicative
-          // of the same problem, but confuse the reader with noise.
-          if (messages.errors.length > 1) {
-            messages.errors.length = 1;
-          }
-          return handleCompilerError(new Error(messages.errors.join("\n\n")));
-        }
-
-        if (messages.warnings.length) {
-          if (cfg.isCI) {
-            console.log(
-              chalk.yellow(
-                "\nTreating warnings as errors because process.env.CI = true.\n" +
-                  "Most CI servers set it automatically.\n"
-              )
-            );
-            return handleCompilerError(
-              new Error(messages.warnings.join("\n\n"))
-            );
-          }
-
-          console.log(chalk.yellow("Compiled with warnings.\n"));
-          console.log(messages.warnings.join("\n\n"));
-          console.log(
-            "\nSearch for the " +
-              chalk.underline(chalk.yellow("keywords")) +
-              " to learn more about each warning."
-          );
-          console.log(
-            "To ignore, add " +
-              chalk.cyan("// eslint-disable-next-line") +
-              " to the line before.\n"
-          );
-        } else {
-          console.log(chalk.green("Compiled successfully.\n"));
-        }
-
-        console.log("File sizes after gzip:\n");
-        FileSizeReporter.printFileSizesAfterBuild(
-          stats,
-          previousFileSizes,
-          cfg.buildDir,
-          WARN_AFTER_BUNDLE_GZIP_SIZE,
-          WARN_AFTER_CHUNK_GZIP_SIZE
-        );
-        console.log();
-
-        printHostingInstructions(
-          require(cfg.packageDotJsonPath),
-          cfg.mountingPath,
-          path.relative(process.cwd(), cfg.buildDir),
-          cfg.useYarn
-        );
+      return new Promise((resolve) => {
+        webpack(createWebpackConfig(cfg), (err, stats) => {
+          resolve([err, stats, previousFileSizes]);
+        });
       });
+    })
+    .then(([err, stats, previousFileSizes]) => {
+      function printErrorAndExit(err) {
+        if (cfg.tscCompileOnError) {
+          console.log(
+            chalk.yellow(
+              "Compiled with the following type errors (you may want to check these before deploying your app):\n"
+            )
+          );
+          printBuildError(err);
+          process.exit();
+        } else {
+          console.log(chalk.red("Failed to compile.\n"));
+          printBuildError(err);
+          process.exit(1);
+        }
+      }
+      let messages;
+      if (err) {
+        if (!err.message) {
+          printErrorAndExit(err);
+        }
+
+        let errMessage = err.message;
+
+        // Add additional information for postcss errors
+        if (Object.prototype.hasOwnProperty.call(err, "postcssNode")) {
+          errMessage +=
+            "\nCompileError: Begins at CSS selector " +
+            err["postcssNode"].selector;
+        }
+
+        messages = formatWebpackMessages({
+          errors: [errMessage],
+          warnings: [],
+        });
+      } else {
+        messages = formatWebpackMessages(
+          stats.toJson({ all: false, warnings: true, errors: true })
+        );
+      }
+
+      if (messages.errors.length) {
+        // Only keep the first error. Others are often indicative
+        // of the same problem, but confuse the reader with noise.
+        if (messages.errors.length > 1) {
+          messages.errors.length = 1;
+        }
+        printErrorAndExit(new Error(messages.errors.join("\n\n")));
+      }
+
+      if (messages.warnings.length && cfg.isCI) {
+        console.log(
+          chalk.yellow(
+            "\nTreating warnings as errors because process.env.CI = true.\n" +
+              "Most CI servers set it automatically.\n"
+          )
+        );
+        printErrorAndExit(new Error(messages.warnings.join("\n\n")));
+      }
+
+      return ((arr) =>
+        process.argv.slice(2).indexOf("--stats") !== -1
+          ? bfj
+              .write(cfg.buildDir + "/bundle-stats.json", stats.toJson())
+              .then(() => arr)
+          : arr)([previousFileSizes, stats, messages]);
+    })
+    .then(([previousFileSizes, stats, messages]) => {
+      if (messages.warnings.length) {
+        console.log(chalk.yellow("Compiled with warnings.\n"));
+        console.log(messages.warnings.join("\n\n"));
+        console.log(
+          "\nSearch for the " +
+            chalk.underline(chalk.yellow("keywords")) +
+            " to learn more about each warning."
+        );
+        console.log(
+          "To ignore, add " +
+            chalk.cyan("// eslint-disable-next-line") +
+            " to the line before.\n"
+        );
+      } else {
+        console.log(chalk.green("Compiled successfully.\n"));
+      }
+
+      console.log("File sizes after gzip:\n");
+      FileSizeReporter.printFileSizesAfterBuild(
+        stats,
+        previousFileSizes,
+        cfg.buildDir,
+        WARN_AFTER_BUNDLE_GZIP_SIZE,
+        WARN_AFTER_CHUNK_GZIP_SIZE
+      );
+      console.log();
+
+      printHostingInstructions(
+        require(cfg.packageDotJsonPath),
+        cfg.mountingPath,
+        path.relative(process.cwd(), cfg.buildDir),
+        cfg.useYarn
+      );
     })
     .catch((err) => {
       if (err && err.message) {
@@ -131,21 +159,6 @@ function clientCompiler(opts) {
       }
       process.exit(1);
     });
-
-  function handleCompilerError(err) {
-    if (cfg.tscCompileOnError) {
-      console.log(
-        chalk.yellow(
-          "Compiled with the following type errors (you may want to check these before deploying your app):\n"
-        )
-      );
-      printBuildError(err);
-    } else {
-      console.log(chalk.red("Failed to compile.\n"));
-      printBuildError(err);
-      process.exit(1);
-    }
-  }
 }
 
 module.exports = clientCompiler;
