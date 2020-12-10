@@ -19,6 +19,7 @@ const {
   prepareUrls,
 } = require("react-dev-utils/WebpackDevServerUtils");
 const openBrowser = require("react-dev-utils/openBrowser");
+const semver = require("semver");
 const getProjectConfig = require("../getProjectConfig");
 const createWebpackConfig = require("../createWebpackConfig");
 const createDevServerConfig = require("./createDevServerConfig");
@@ -83,6 +84,17 @@ function devServer(opts = {}) {
         }
         if (cfg.isInteractive) {
           clearConsole();
+        }
+
+        const react = require(require.resolve("react", {
+          paths: [cfg.packageDir],
+        }));
+        if (cfg.devServer.fastRefresh && semver.lt(react.version, "16.10.0")) {
+          console.log(
+            chalk.yellow(
+              `Fast Refresh requires React 16.10 or higher. You are using React ${react.version}.`
+            )
+          );
         }
 
         console.log(chalk.cyan("Starting the development server...\n"));

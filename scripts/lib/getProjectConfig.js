@@ -65,11 +65,9 @@ function getProjectConfig(target, ...args) {
     cfg.devServer.socketPort = opts.devServer.socketPort;
     cfg.devServer.socketPath = opts.devServer.socketPath;
 
-    // `react-refresh` is not 100% stable at this time, which is why it's
-    // disabled by default.
     // We pass it to the client as an environment variable so it is available
     // in the `webpackHotDevClient`.
-    cfg.devServer.fastRefresh = opts.devServer.fastRefresh === true;
+    cfg.devServer.fastRefresh = opts.devServer.fastRefresh !== false;
     // Note: Add this to `node_modules/react-dev-utils/webpackHotDevClient`:
     // diff --git a/packages/react-dev-utils/webpackHotDevClient.js b/packages/react-dev-utils/webpackHotDevClient.js
     // index 1054ce48..0379358f 100644
