@@ -107,6 +107,9 @@ function getProjectConfig(target, ...args) {
     cfg.packageDotJsonPath = resolveApp("package.json");
     cfg.nodeModulesDir = resolveApp("node_modules");
     cfg.srcDir = resolveApp(opts.srcDir || "src");
+    cfg.serviceWorkerPath = resolveModule(
+      opts.serviceWorkerPath || "src/service-worker"
+    );
 
     cfg.isInteractive = process.stdout.isTTY;
 
