@@ -321,6 +321,9 @@ function webpackConfigFactory(cfg) {
                 formatter: require.resolve("react-dev-utils/eslintFormatter"),
                 eslintPath: require.resolve("eslint"),
                 resolvePluginsRelativeTo: __dirname,
+                baseConfig: {
+                  extends: [require.resolve("eslint-config-react-app/base")],
+                },
               },
               loader: require.resolve("eslint-loader"),
             },
