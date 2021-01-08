@@ -318,6 +318,7 @@ function webpackConfigFactory(cfg) {
             {
               options: {
                 cache: true,
+                cwd: cfg.packageDir,
                 formatter: require.resolve("react-dev-utils/eslintFormatter"),
                 eslintPath: require.resolve("eslint"),
                 resolvePluginsRelativeTo: __dirname,
