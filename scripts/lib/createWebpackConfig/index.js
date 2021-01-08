@@ -30,6 +30,9 @@ const postcssNormalize = require("postcss-normalize");
 const webpackDevClientEntry = require.resolve(
   "react-dev-utils/webpackHotDevClient"
 );
+const reactRefreshOverlayEntry = require.resolve(
+  "react-dev-utils/refreshOverlayInterop"
+);
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -294,7 +297,10 @@ function webpackConfigFactory(cfg) {
         // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
-        new ModuleScopePlugin(cfg.srcDir, [cfg.packageDotJsonPath]),
+        new ModuleScopePlugin(cfg.srcDir, [
+          cfg.packageDotJsonPath,
+          reactRefreshOverlayEntry,
+        ]),
       ],
     },
     resolveLoader: {
@@ -553,7 +559,7 @@ function webpackConfigFactory(cfg) {
             entry: webpackDevClientEntry,
             // The expected exports are slightly different from what the overlay exports,
             // so an interop is included here to enable feedback on module-level errors.
-            module: require.resolve("react-dev-utils/refreshOverlayInterop"),
+            module: reactRefreshOverlayEntry,
             // Since we ship a custom dev client and overlay integration,
             // the bundled socket handling logic can be eliminated.
             sockIntegration: false,
