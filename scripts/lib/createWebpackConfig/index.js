@@ -19,6 +19,7 @@ const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const WatchMissingNodeModulesPlugin = require("react-dev-utils/WatchMissingNodeModulesPlugin");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
+const ESLintPlugin = require("eslint-webpack-plugin");
 const getClientEnvironment = require("./getClientEnvironment");
 const ModuleNotFoundPlugin = require("react-dev-utils/ModuleNotFoundPlugin");
 const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpackPlugin");
@@ -308,29 +309,6 @@ function webpackConfigFactory(cfg) {
       rules: [
         // Disable require.ensure as it's not a standard language feature.
         { parser: { requireEnsure: false } },
-
-        // First, run the linter.
-        // It's important to do this before Babel processes the JS.
-        {
-          test: /\.(js|mjs|jsx|ts|tsx)$/,
-          enforce: "pre",
-          use: [
-            {
-              options: {
-                cache: true,
-                cwd: cfg.packageDir,
-                formatter: require.resolve("react-dev-utils/eslintFormatter"),
-                eslintPath: require.resolve("eslint"),
-                resolvePluginsRelativeTo: __dirname,
-                baseConfig: {
-                  extends: [require.resolve("eslint-config-react-app/base")],
-                },
-              },
-              loader: require.resolve("eslint-loader"),
-            },
-          ],
-          include: cfg.srcDir,
-        },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -662,6 +640,19 @@ function webpackConfigFactory(cfg) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      new ESLintPlugin({
+        // Plugin options
+        extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+        formatter: require.resolve("react-dev-utils/eslintFormatter"),
+        eslintPath: require.resolve("eslint"),
+        context: cfg.srcDir,
+        // ESLint class options
+        cwd: cfg.packageDir,
+        resolvePluginsRelativeTo: __dirname,
+        baseConfig: {
+          extends: [require.resolve("eslint-config-react-app/base")],
+        },
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.
