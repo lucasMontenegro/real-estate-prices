@@ -43,6 +43,18 @@ function webpackConfigFactory(cfg) {
   const sassRegex = /\.(scss|sass)$/;
   const sassModuleRegex = /\.module\.(scss|sass)$/;
 
+  const hasJsxRuntime = (() => {
+    if (cfg.disableNewJsxTransform) {
+      return false;
+    }
+    try {
+      require.resolve("react/jsx-runtime");
+      return true;
+    } catch (e) {
+      return false;
+    }
+  })();
+
   const isEnvDevelopment = cfg.nodeEnv === "development";
   const isEnvProduction = cfg.nodeEnv === "production";
 
@@ -657,6 +669,11 @@ function webpackConfigFactory(cfg) {
         resolvePluginsRelativeTo: __dirname,
         baseConfig: {
           extends: [require.resolve("eslint-config-react-app/base")],
+          rules: {
+            ...(!hasJsxRuntime && {
+              "react/react-in-jsx-scope": "error",
+            }),
+          },
         },
       }),
     ].filter(Boolean),

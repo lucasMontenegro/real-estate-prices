@@ -194,6 +194,13 @@ function getProjectConfig(target, ...args) {
     cfg.useTypeScript = fs.existsSync(cfg.tsConfigPath);
 
     cfg.useYarn = fs.existsSync(resolveApp("yarn.lock"));
+
+    // When set to `true`, disables the new JSX transform introduced in
+    // React 17 and backported to React 16.14.0, 15.7.0, and 0.14.10. New
+    // projects will use a version of React that supports this by default but
+    // you may need to disable it in existing projects if you can't upgrade
+    // React.
+    cfg.disableNewJsxTransform = opts.disableNewJsxTransform === true;
   }
 
   if (isTarget("clientCompiler", "devServer", "jestQa")) {
