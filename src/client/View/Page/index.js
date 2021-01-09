@@ -1,5 +1,4 @@
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
 import AppBar from "@material-ui/core/AppBar";
 import cover from "./cover.jpg";
 import logo from "./logo.svg";

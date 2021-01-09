@@ -1,6 +1,5 @@
 import "fontsource-roboto";
 import { makeStyles } from "@material-ui/core/styles";
-import React from "react";
 import Theme from "./Theme";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Page from "./Page";
