@@ -638,6 +638,9 @@ function webpackConfigFactory(cfg) {
           swSrc: cfg.serviceWorkerPath,
           dontCacheBustURLsMatching: /\.[0-9a-f]{8}\./,
           exclude: [/\.map$/, /asset-manifest\.json$/, /LICENSE/],
+          // Bump up the default maximum size (2mb) that's precached,
+          // to make lazy-loading failure scenarios less likely.
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         }),
       // TypeScript type checking
       cfg.useTypeScript &&
