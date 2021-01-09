@@ -364,7 +364,14 @@ function webpackConfigFactory(cfg) {
                 customize: require.resolve(
                   "babel-preset-react-app/webpack-overrides"
                 ),
-
+                presets: [
+                  [
+                    require.resolve("babel-preset-react-app"),
+                    {
+                      runtime: hasJsxRuntime ? "automatic" : "classic",
+                    },
+                  ],
+                ],
                 plugins: [
                   [
                     require.resolve("babel-plugin-named-asset-import"),
